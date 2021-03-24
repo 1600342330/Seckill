@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container showBook">
+        <div class="row clearfix">
+            <div class="col-md-12">
+                <h1 class="page-header">
+                    <small>秒杀商品列表</small>
+                </h1>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-md-12">
+                <table class="table table-hover table-bordered">
+                    <tr>
+                        <th>商品名称</th>
+                        <th>商品图片</th>
+                        <th>秒杀价格</th>
+                        <th>秒杀数量</th>
+                        <th>秒杀开始时间</th>
+                        <th>秒杀结束时间</th>
+                        <th>商品详情</th>
+                    </tr>
+
+                    <tr th:each="goods:${goodsList}">
+                        <td th:text="${goods.goods_name}"></td>
+                        <td><img th:src="@{${goods.goods_img}}" style="width: 200px;height: 150px"></td>
+                        <td th:text="${goods.miaosha_price}"></td>
+                        <td th:text="${goods.stock_count}"></td>
+                        <td th:text="${#dates.format(goods.start_date, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${#dates.format(goods.end_date, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td><a th:href="'/good_detail_static.htm?goodsId='+${goods.id}">详情</a></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/miaosha?useSSL=false
+    username: root
+    password: 123
+    type: com.alibaba.druid.pool.DruidDataSource
+  redis:
+    host: 121.5.29.121
+    port: 6381
+    timeout: 2000
+    jedis:
+      pool:
+        min-idle: 20000
+        max-idle: 100000
+        max-wait: 10000
+        max-active: 100000
+
+  rabbitmq:
+    host: 121.5.29.121
+    port: 5672
+    username: ems
+    password: 123456
+    virtual-host: /ems
+
+
+mybatis:
+  type-aliases-package: site.kexing.pojo,site.kexing.vo
+  mapper-locations: classpath:mapper/*.xml
+server:
+  port: 8082

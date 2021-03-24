@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="site.kexing.dao.MiaoShaGoodsDao">
+    <select id="getMiaosha_goodsByid" resultType="int">
+        select stock_count from miaosha_goods where id = #{goods_id}
+    </select>
+
+    <update id="reduceStockCount">
+        update miaosha_goods set stock_count = stock_count-1 where goods_id = #{good_id} and stock_count > 0
+    </update>
+</mapper>

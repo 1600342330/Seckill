@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="site.kexing.dao.MiaoSha_OrderDao">
+    <select id="getOrderByUidAndGoodsId" resultType="miaosha_order">
+        select * from miaosha_order where user_id = #{user.id} and goods_id = #{good_id};
+    </select>
+    <insert id="createMiaoSha_Order">
+        insert into miaosha_order(user_id,order_id,goods_id) values (#{user.id},#{order_id},#{good.id})
+    </insert>
+</mapper>

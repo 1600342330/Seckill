@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="site.kexing.dao.GoodsDao">
+    <select id="getGoodsList" resultType="goodsList">
+        select goods.*,miaosha_goods.miaosha_price,miaosha_goods.stock_count,miaosha_goods.start_date,miaosha_goods.end_date
+        from goods left join miaosha_goods on goods.id = miaosha_goods.goods_id
+    </select>
+
+    <select id="getGoodsListById" resultType="goodsList">
+        select goods.*,miaosha_goods.miaosha_price,miaosha_goods.stock_count,miaosha_goods.start_date,miaosha_goods.end_date
+        from goods left join miaosha_goods on goods.id = miaosha_goods.goods_id
+        where goods.id = #{id}
+    </select>
+</mapper>

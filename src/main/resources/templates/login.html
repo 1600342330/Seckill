@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" class="login-content" data-ng-app="materialAdmin"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Login</title>
+	<link th:href="@{css/material-design-iconic-font/css/material-design-iconic-font.min.css}" rel="stylesheet" type="text/css">
+	<!-- CSS -->
+	<link th:href="@{css/app.min.1.css}" rel="stylesheet" type="text/css">
+
+
+	<script th:src="@{http://www.jq22.com/jquery/2.1.1/jquery.min.js}"></script>
+	<!--	md5-->
+<!--	<script src="https://cdn.bootcdn.net/ajax/libs/blueimp-md5/2.18.0/js/md5.js"></script>-->
+	<script type="text/javascript" th:src="@{js/md5/md5.js}"></script>
+
+	<!-- Angular -->
+	<script th:src="@{js/bower_components/angular/angular.min.js}"></script>
+	<script th:src="@{js/bower_components/angular-resource/angular-resource.min.js}"></script>
+	<script th:src="@{js/bower_components/angular-animate/angular-animate.min.js}"></script>
+
+	<!-- Angular Modules -->
+	<script th:src="@{js/bower_components/angular-ui-router/release/angular-ui-router.min.js}"></script>
+	<script th:src="@{js/bower_components/angular-loading-bar/src/loading-bar.js}"></script>
+	<script th:src="@{js/bower_components/oclazyload/dist/ocLazyLoad.min.js}"></script>
+	<script th:src="@{js/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js}"></script>
+
+	<!-- Common js -->
+	<script th:src="@{js/bower_components/angular-nouislider/src/nouislider.min.js}"></script>
+	<script th:src="@{js/bower_components/ng-table/dist/ng-table.min.js}"></script>
+
+	<script th:src="@{js/app.js}"></script>
+	<script th:src="@{js/controllers/main.js}"></script>
+	<script th:src="@{js/controllers/ui-bootstrap.js}"></script>
+
+	<!-- Template Modules -->
+	<script th:src="@{js/modules/form.js}"></script>
+
+</head>
+<body class="login-content" data-ng-controller="loginCtrl as lctrl">
+<form style="position: relative;top: 250px;">
+	<div class="lc-block" id="l-login" data-ng-class="{'toggled':lctrl.login === 1}">
+		<h1 class="lean">Login</h1>
+		<div class="input-group m-b-20">
+				<span class="input-group-addon">
+					<i class="zmdi zmdi-account"></i>
+				</span>
+			<div class="fg-line">
+				<input type="text" name="nickname" id="nickname" class="form-control" placeholder="Username"/>
+			</div>
+		</div>
+		<div class="input-group m-b-20">
+				<span class="input-group-addon">
+					<i class="zmdi zmdi-male"></i>
+				</span>
+			<div class="fg-line">
+				<input type="password" name="password" id="password" class="form-control" placeholder="Password"/>
+			</div>
+		</div>
+		<button type="submit" class="btn btn-login btn-danger btn-float zmdi zmdi-arrow-forward" onclick="login()">
+		</button>
+	</div>
+</form>
+</body>
+<script>
+	function login() {
+		var pass = $("#password").val();
+		var salt = "1a2b3c4d";
+		var password = salt.charAt(0)+salt.charAt(2)+pass+salt.charAt(4)+salt.charAt(5);
+		var pass = $.md5(encodeURIComponent(password));
+		$.ajax({
+			url:"/dologin",
+			type:"POST",
+			data:{
+				nickname:$("#nickname").val(),
+				password:pass
+			},
+			success:function (data) {
+				if(data.code == 0){
+					alert("登陆成功");
+					console.log(data.data)
+					window.location.href = "/togoodslist";
+				}else{
+					alert("登陆失败，请检查账号是否正确")
+				}
+			},
+		})
+	}
+</script>
+</html>

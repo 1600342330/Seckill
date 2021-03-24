@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/layer/3.1.1/layer.js"></script>
+    <script src="js/common.js"></script>
+    <style>
+        #detail{
+            width: 600px;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+<div id="detail">
+    <div class="container showBook">
+        <div class="row clearfix">
+            <div class="col-md-12">
+                <h1 class="page-header">
+                    <small>秒杀商品列表</small>
+                </h1>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-md-12">
+                <table class="table table-hover table-bordered">
+                    <tr>
+                        <td>商品名称</td>
+                        <td id="goods_name"></td>
+                    </tr>
+
+                    <tr>
+                        <td>商品图片</td>
+                        <td><img id="goods_img" style="width: 200px;height: 150px"></td>
+                    </tr>
+
+                    <tr>
+                        <td>商品描述</td>
+                        <td id="goods_detail"></td>
+                    </tr>
+
+                    <tr>
+                        <td>商品原价</td>
+                        <td id="goods_price"></td>
+                    </tr>
+
+                    <tr>
+                        <td>商品秒杀价</td>
+                        <td id="miaosha_price"></td>
+                    </tr>
+
+                    <tr>
+                        <td>秒杀库存数量</td>
+                        <td id="stock_count"></td>
+                    </tr>
+
+                    <tr>
+                        <td>秒杀开始时间</td>
+                        <td id="start_date"></td>
+                    </tr>
+
+                    <tr>
+                        <input type="hidden" id="timeSecond">
+                        <td>秒杀状态</td>
+                        <td id="status" style="color: red"></td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <button id="btn" type="button" class="btn btn-danger" onclick="getMiaoshaPath()">秒杀</button>
+                            <input type="hidden" name="good_id" id="good_id">
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function getMiaoDetail(good_id) {
+        $.ajax({
+            url: "/getmiaoshadetail",
+            type: "POST",
+            data:{
+                good_id : good_id
+            },
+            success:function (data) {
+                if(data.code == 0){
+                    if(data.data == 0){
+                        //排队中
+                        layer.msg("前方拥挤，正在排队中...")
+                        setTimeout(function () {
+                            getMiaoDetail(good_id)
+                        },50)
+                    }else if (data.data == -1){
+                        //秒杀失败
+                        layer.msg("手速慢了哦，秒杀失败")
+                    }else{
+                        //秒杀成功
+                        layer.msg("恭喜秒杀成功")
+                        window.location.href = "/order_detail_static.htm?orderId="+data.data;
+                    }
+                }else{
+                    layer.msg(data.msg)
+                }
+            },
+            error:function () {
+                layer.msg("服务端请求错误")
+            }
+        })
+    }
+    
+    function getMiaoshaPath() {
+        var good_id = $("#good_id").val();
+        $.ajax({
+            url: "/getmiaoshapath",
+            type: "GET",
+            data:{
+                good_id : good_id
+            },
+            success:function (data) {
+                if(data.code == 0){
+                    miaosha(data.data);
+                }else{
+                    layer.msg(data.msg)
+                }
+            },
+            error:function () {
+                layer.msg("服务端请求错误")
+            }
+        })
+    }
+
+    function miaosha(path) {
+        var good_id = $("#good_id").val();
+        $.ajax({
+            url: "/miaosha_static/"+path,
+            type: "POST",
+            data:{
+                good_id : good_id
+            },
+            success:function (data) {
+                if(data.code == 0){
+                    getMiaoDetail(good_id);
+                }else{
+                    layer.msg(data.msg)
+                }
+            },
+            error:function () {
+                layer.msg("服务端请求错误")
+            }
+        })
+    }
+
+
+    function render(goodDetail) {
+        var second = goodDetail.second;
+        var status = goodDetail.status;
+        var good = goodDetail.good;
+
+        $("#goods_name").text(good.goods_name);
+        $("#goods_img").attr("src",good.goods_img);
+        $("#goods_detail").text(good.goods_detail);
+        $("#goods_price").text(good.goods_price);
+        $("#miaosha_price").text(good.miaosha_price);
+        $("#stock_count").text(good.stock_count);
+        $("#start_date").text(new Date(good.start_date).format("yyyy-MM-dd hh:mm:ss"));
+        $("#timeSecond").val(second);
+        $("#status").val(status);
+        $("#good_id").val(good.id);
+        fun();
+    }
+
+    $(function () {
+        getDetail()
+    })
+
+    function getDetail () {
+        var goodid = g_getQueryString("goodsId");
+        $.ajax({
+            url: "goodsdetail_static/"+goodid,
+            type: "GET",
+            success:function (data) {
+                if(data.code == 0){
+                    console.log(data.data)
+                    render(data.data)
+                }else{
+                    layer.msg("服务端请求错误")
+                }
+            },
+            error:function () {
+                layer.msg("服务端请求错误")
+            }
+        })
+    }
+
+    function fun () {
+        var timeSecond = $("#timeSecond").val();
+        var se = $("#se").text();
+        var timeout;
+        if (timeSecond > 0) {
+            //秒杀未开始，倒计时
+            $("#status").html("秒杀倒计时"+timeSecond+"秒")
+            $("#btn").attr("disabled", true);
+            timeout = setTimeout(function () {
+                $("#se").text(timeSecond);
+                $("#timeSecond").val(timeSecond-1);
+                fun();
+            }, 1000)
+        } else if (timeSecond == 0) {
+            //秒杀开始
+            $("#btn").attr("disabled", false);
+            clearTimeout(timeout);
+            $("#status").html("秒杀进行中")
+        } else{
+            //秒杀结束
+            $("#btn").attr("disabled", true);
+            $("#status").html("秒杀已结束")
+        }
+    }
+</script>
+</body>
+</html>

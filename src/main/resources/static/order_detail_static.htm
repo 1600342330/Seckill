@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="js/common.js"></script>
+</head>
+<body>
+<div id="detail">
+    <div class="container showBook">
+        <div class="row clearfix">
+            <div class="col-md-12">
+                <h1 class="page-header">
+                    <small id="title_goods_name"></small>
+                </h1>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-12">
+                <table class="table table-hover table-bordered">
+                    <tr>
+                        <td>商品名称</td>
+                        <td id="goods_name"></td>
+                    </tr>
+
+                    <tr>
+                        <td>商品图片</td>
+                        <td><img id="goods_img" style="width: 200px;height: 150px"></td>
+                    </tr>
+
+                    <tr>
+                        <td>商品原价</td>
+                        <td id="goods_price"></td>
+                    </tr>
+
+                    <tr>
+                        <td>秒杀价</td>
+                        <td id="miaosha_price"></td>
+                    </tr>
+
+                    <tr>
+                        <td>订单状态</td>
+                        <td id="status" style="color: red"></td>
+                    </tr>
+
+                    <tr>
+                        <td>订单创建时间</td>
+                        <td id="create_date"></td>
+                    </tr>
+
+                    <tr>
+                        <td><button id="btn" class="pay btn btn-danger" type="button" style="display: none">立即支付</button></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+<script>
+    function render(orderDetail) {
+        var order_info = orderDetail.order_info;
+        var order_good = orderDetail.order_good;
+        $("#title_goods_name").text(order_good.goods_name);
+        $("#goods_name").text(order_good.goods_name);
+        $("#goods_img").attr("src",order_good.goods_img);
+        $("#goods_price").text(order_good.goods_price);
+        $("#miaosha_price").text(order_good.miaosha_price);
+        $("#status").val(order_info.status);
+        $("#create_date").text(new Date(order_info.create_date).format("yyyy-MM-dd hh:mm:ss"));
+
+        var status = "";
+        if(status == 0){
+            status = "新建未支付"
+            var btn = document.getElementsByClassName("pay")
+            for (let i = 0; i < btn.length; i++) {
+                btn[i].style.display = "block";
+            }
+        }else if (status == 1){
+            status = "已支付"
+        }else if (status == 2){
+            status = "已发货"
+        }else if (status == 3){
+            status = "已收货"
+        }else if (status == 4){
+            status = "已退款"
+        }else{
+            status = "已完成"
+        }
+        $("#status").text(status)
+    }
+
+    $(function () {
+        getOrderDetail();
+    })
+
+    function getOrderDetail() {
+        //获取商品详情传递过来的订单id
+        var orderId = g_getQueryString("orderId");
+        $.ajax({
+            url :"/getOrderDetail",
+            type: "POST",
+            data:{
+                orderId:orderId
+            },
+            success:function (data) {
+                if(data.code == 0){
+                    render(data.data)
+                }
+            },
+            error:function () {
+                alert("服务器请求错误")
+            }
+        })
+    }
+
+
+</script>
+</html>
