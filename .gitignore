@@ -1,10 +1,25 @@
+<<<<<<< HEAD
 *.class
 *.log
 *.lock
+=======
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+>>>>>>> 777f920dc9f1386345954c045b1ae4c97fb6fa5e
 
 # Package Files #
 *.jar
 *.war
+<<<<<<< HEAD
 *.ear
 target/
 
@@ -34,3 +49,13 @@ tmp/
 
 #rebel
 *rebel.xml*
+=======
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+>>>>>>> 777f920dc9f1386345954c045b1ae4c97fb6fa5e
