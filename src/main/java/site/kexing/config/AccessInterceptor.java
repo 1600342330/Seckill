@@ -51,7 +51,6 @@ public class AccessInterceptor implements HandlerInterceptor {
 
             /**
              * 根据注解填的参数进行限流，接口的uri+"_"+userID为Key，最大请求数maxCount为Value
-             *
              */
             String requestURI = request.getRequestURI();
             String key = requestURI + "_" + user.getId();

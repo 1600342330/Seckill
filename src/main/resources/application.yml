@@ -6,8 +6,8 @@ spring:
     password: 123
     type: com.alibaba.druid.pool.DruidDataSource
   redis:
-    host: 121.5.29.121
-    port: 6381
+    host: 127.0.0.1
+    port: 6379
     timeout: 2000
     jedis:
       pool:

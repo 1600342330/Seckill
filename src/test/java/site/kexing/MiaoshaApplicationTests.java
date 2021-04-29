@@ -8,6 +8,9 @@ import site.kexing.dao.GoodsDao;
 import site.kexing.redis.config.RedisConfig;
 import site.kexing.redis.config.RedisPoolConfig;
 import site.kexing.redis.RedisService;
+import site.kexing.vo.GoodsList;
+
+import java.util.List;
 
 @SpringBootTest
 class MiaoshaApplicationTests {
@@ -24,6 +27,10 @@ class MiaoshaApplicationTests {
 
     @Test
     void contextLoads() {
+        List<GoodsList> goodsList = goodsDao.getGoodsList();
+        for (GoodsList list : goodsList) {
+            System.out.println(list);
+        }
     }
 
 }

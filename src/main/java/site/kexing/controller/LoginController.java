@@ -50,15 +50,6 @@ public class LoginController {
         if(s.equals(loginUser.getPassword())){
             //生成随机的token
             String token = UUIDUtil.uuid();
-
-            File file = new File("/usr/local/loginData.csv");
-            if(!file.getParentFile().exists()){   //文件不存在
-                file.getParentFile().mkdirs();   //创建父目录
-            }
-            OutputStream os = new FileOutputStream(file,true);
-            os.write((nickname+',').getBytes());
-            os.write((token+"\r\n").getBytes());
-
             //将token和用户作为key与value存入缓存
             redisService.set(MiaoShaUserKey.userKeyToken,token,loginUser);
             //封装cookie
